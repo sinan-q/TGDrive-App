@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.ibashkimi.telegram">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:name=".TelegramApplication"
@@ -14,7 +13,9 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name="com.ibashkimi.telegram.MainActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

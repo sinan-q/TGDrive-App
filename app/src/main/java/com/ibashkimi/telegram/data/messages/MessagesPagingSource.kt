@@ -6,7 +6,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import org.drinkless.td.libcore.telegram.TdApi
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class MessagesPagingSource(
     private val chatId: Long,
     private val messages: MessagesRepository

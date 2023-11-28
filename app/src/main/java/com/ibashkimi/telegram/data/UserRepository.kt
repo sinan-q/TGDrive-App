@@ -10,9 +10,9 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class UserRepository @Inject constructor(private val client: TelegramClient) {
 
-    fun getUser(userId: Int): Flow<TdApi.User> = callbackFlow {
+    fun getUser(userId: Long): Flow<TdApi.User> = callbackFlow {
         client.client.send(TdApi.GetUser(userId)) {
-            offer(it as TdApi.User)
+            trySend(it as TdApi.User).isSuccess
         }
         awaitClose { }
     }

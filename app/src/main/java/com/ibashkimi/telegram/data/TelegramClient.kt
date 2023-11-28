@@ -85,11 +85,7 @@ class TelegramClient @Inject constructor(
 
     fun insertPhoneNumber(phoneNumber: String) {
         Log.d("TelegramClient", "phoneNumber: $phoneNumber")
-        val settings = TdApi.PhoneNumberAuthenticationSettings(
-            false,
-            false,
-            false
-        )
+        val settings = TdApi.PhoneNumberAuthenticationSettings()
         client.send(TdApi.SetAuthenticationPhoneNumber(phoneNumber, settings)) {
             Log.d("TelegramClient", "phoneNumber. result: $it")
             when (it.constructor) {
@@ -198,7 +194,7 @@ class TelegramClient @Inject constructor(
         client.send(TdApi.DownloadFile(fileId, 1, 0, 0, true)) {
             when (it.constructor) {
                 TdApi.Ok.CONSTRUCTOR -> {
-                    offer(Unit)
+                    trySend(Unit).isSuccess
                 }
                 else -> {
                     cancel("", Exception(""))
@@ -216,7 +212,7 @@ class TelegramClient @Inject constructor(
                     error("")
                 }
                 else -> {
-                    offer(it)
+                    trySend(it).isSuccess
                 }
             }
             //close()

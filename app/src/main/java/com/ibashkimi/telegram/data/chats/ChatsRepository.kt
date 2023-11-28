@@ -13,10 +13,10 @@ class ChatsRepository @Inject constructor(private val client: TelegramClient) {
 
     private fun getChatIds(offsetOrder: Long = Long.MAX_VALUE, limit: Int): Flow<LongArray> =
         callbackFlow {
-            client.client.send(TdApi.GetChats(TdApi.ChatListMain(), offsetOrder, 0, limit)) {
+            client.client.send(TdApi.GetChats(TdApi.ChatListMain(),  limit)) {
                 when (it.constructor) {
                     TdApi.Chats.CONSTRUCTOR -> {
-                        offer((it as TdApi.Chats).chatIds)
+                        trySend((it as TdApi.Chats).chatIds).isSuccess
                     }
                     TdApi.Error.CONSTRUCTOR -> {
                         error("")
@@ -43,7 +43,7 @@ class ChatsRepository @Inject constructor(private val client: TelegramClient) {
         client.client.send(TdApi.GetChat(chatId)) {
             when (it.constructor) {
                 TdApi.Chat.CONSTRUCTOR -> {
-                    offer(it as TdApi.Chat)
+                    trySend(it as TdApi.Chat).isSuccess
                 }
                 TdApi.Error.CONSTRUCTOR -> {
                     error("Something went wrong")

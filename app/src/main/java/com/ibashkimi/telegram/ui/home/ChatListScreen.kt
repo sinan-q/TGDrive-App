@@ -11,7 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.itemsIndexed
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.ibashkimi.telegram.data.TelegramClient
 import org.drinkless.td.libcore.telegram.TdApi
 
@@ -29,7 +30,12 @@ fun ChatsLoaded(
                 LoadingChats()
             }
         }
-        itemsIndexed(chats) { index, item ->
+        items(
+            count = chats.itemCount,
+            key = chats.itemKey(),
+            contentType = chats.itemContentType()
+        ) { index ->
+            val item = chats[index]
             item?.let { chat ->
                 ChatItem(
                     client,

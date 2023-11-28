@@ -26,7 +26,8 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemsIndexed
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.ibashkimi.telegram.R
 import com.ibashkimi.telegram.data.TelegramClient
 import com.ibashkimi.telegram.ui.util.TelegramImage
@@ -144,11 +145,16 @@ fun ChatHistory(
                 }
             }
         }
-        itemsIndexed(messages) { i, message ->
+        items(
+            count = messages.itemCount,
+            key = messages.itemKey(),
+            contentType = messages.itemContentType()
+        ) { i ->
+            val message = messages[i]
             message?.let {
-                val userId = (message.sender as TdApi.MessageSenderUser).userId
+                val userId = (message.senderId as TdApi.MessageSenderUser).userId
                 val previousMessageUserId =
-                    if (i > 0) (messages[i - 1]?.sender as TdApi.MessageSenderUser?)?.userId else null
+                    if (i > 0) (messages[i - 1]?.senderId as TdApi.MessageSenderUser?)?.userId else null
                 MessageItem(
                     isSameUserFromPreviousMessage = userId == previousMessageUserId,
                     client,
@@ -191,7 +197,7 @@ private fun MessageItem(
             if (!isSameUserFromPreviousMessage) {
                 ChatUserIcon(
                     client,
-                    (message.sender as TdApi.MessageSenderUser).userId,
+                    (message.senderId as TdApi.MessageSenderUser).userId,
                     Modifier
                         .padding(8.dp)
                         .clip(shape = CircleShape)
@@ -246,7 +252,7 @@ private fun MessageItemContent(
 }
 
 @Composable
-private fun ChatUserIcon(client: TelegramClient, userId: Int, modifier: Modifier) {
+private fun ChatUserIcon(client: TelegramClient, userId: Long, modifier: Modifier) {
     val user = client.send<TdApi.User>(TdApi.GetUser(userId)).collectAsState(initial = null).value
     TelegramImage(client, user?.profilePhoto?.small, modifier = modifier)
 }

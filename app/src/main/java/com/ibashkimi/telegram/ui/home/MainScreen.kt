@@ -13,10 +13,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
-import androidx.navigation.compose.popUpTo
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ibashkimi.telegram.R
 import com.ibashkimi.telegram.Screen
@@ -111,7 +110,6 @@ fun MainScreenScaffold(
     )
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun HomeContent(
     navController: NavController,

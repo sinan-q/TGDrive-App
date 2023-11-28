@@ -25,7 +25,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import org.drinkless.td.libcore.telegram.TdApi
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun CreateChatScreen(
     navigateUp: () -> Unit,

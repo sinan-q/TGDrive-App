@@ -18,7 +18,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
-import com.google.accompanist.coil.CoilImage
+import coil.compose.AsyncImage
 import com.ibashkimi.telegram.data.TelegramClient
 import com.ibashkimi.telegram.ui.util.TelegramImage
 import org.drinkless.td.libcore.telegram.TdApi
@@ -103,9 +103,8 @@ fun AnimationMessage(
         client.downloadableFile(content.animation.animation).collectAsState(initial = null)
     Column {
         path.value?.let { filePath ->
-            CoilImage(data = File(filePath), modifier = Modifier.size(56.dp)) {
+            AsyncImage(model = File(filePath), modifier = Modifier.size(56.dp), contentDescription = "")
 
-            }
         } ?: Text(text = "path null", modifier = modifier)
         Text(text = "path: ${path.value}")
     }
