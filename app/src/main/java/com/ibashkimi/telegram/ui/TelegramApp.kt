@@ -31,7 +31,7 @@ fun TelegramApp(activity: Activity) {
 
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
-private fun MainNavHost(navController: NavHostController, homeViewModel: HomeViewModel = viewModel(),loginViewModel: LoginViewModel = viewModel()) {
+private fun MainNavHost(navController: NavHostController, homeViewModel: HomeViewModel = hiltViewModel(), loginViewModel: LoginViewModel = hiltViewModel()) {
     NavHost(navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) {
             MainScreen(navController = navController, viewModel = homeViewModel)

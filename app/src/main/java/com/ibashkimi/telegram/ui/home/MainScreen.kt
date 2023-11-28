@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState
     when (uiState) {
@@ -34,7 +34,7 @@ fun MainScreen(
             LoadingScreen(modifier)
         }
         UiState.Loaded -> {
-            MainScreenScaffold(navController = navController, modifier = modifier)
+            MainScreenScaffold(navController = navController, modifier = modifier, viewModel = viewModel)
         }
         UiState.Login -> {
             navController.navigate(Screen.Login.route) {
@@ -56,7 +56,7 @@ private fun LoadingScreen(modifier: Modifier = Modifier) {
 fun MainScreenScaffold(
     navController: NavController,
     modifier: Modifier,
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: HomeViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
     val scope = rememberCoroutineScope()
@@ -114,7 +114,7 @@ fun MainScreenScaffold(
 fun HomeContent(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: HomeViewModel = hiltViewModel(),
     showSnackbar: (String) -> Unit
 ) {
     val chats = viewModel.chats.collectAsLazyPagingItems()
