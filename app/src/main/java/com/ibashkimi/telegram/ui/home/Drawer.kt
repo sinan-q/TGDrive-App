@@ -36,7 +36,7 @@ fun DrawerContent(
             DrawerContentHeader(client)
         }
         navigationItem(
-            imageVector = Icons.Outlined.People,
+            imageVector = Icons.Outlined.Person,
             text = "New group",
             onClick = newGroup
         )
@@ -51,7 +51,7 @@ fun DrawerContent(
             onClick = calls
         )
         navigationItem(
-            imageVector = Icons.Outlined.BookmarkBorder,
+            imageVector = Icons.Outlined.Person,
             text = "Saved Messages",
             onClick = savedMessages
         )
