@@ -10,8 +10,10 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Gif
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.AttachFile
 import androidx.compose.material.icons.outlined.Mic
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
@@ -41,7 +44,7 @@ fun ChatScreen(
     chatId: Long,
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: ChatScreenViewModel = viewModel()
+    viewModel: ChatScreenViewModel = hiltViewModel()
 ) {
     LaunchedEffect(chatId) {
         viewModel.setChatId(chatId)
@@ -277,7 +280,7 @@ fun MessageInput(
             leadingIcon = {
                 IconButton(onClick = insertGif) {
                     Icon(
-                        imageVector = Icons.Default.Gif,
+                        imageVector = Icons.Default.Person,
                         contentDescription = null
                     )
                 }
@@ -287,13 +290,13 @@ fun MessageInput(
                     Row {
                         IconButton(onClick = attachFile) {
                             Icon(
-                                imageVector = Icons.Outlined.AttachFile,
+                                imageVector = Icons.Outlined.Person,
                                 contentDescription = null
                             )
                         }
                         IconButton(onClick = { }) {
                             Icon(
-                                imageVector = Icons.Outlined.Mic,
+                                imageVector = Icons.Outlined.Person,
                                 contentDescription = null
                             )
                         }

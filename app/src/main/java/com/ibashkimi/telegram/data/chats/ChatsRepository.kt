@@ -11,6 +11,32 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class ChatsRepository @Inject constructor(private val client: TelegramClient) {
 
+    fun searchChats(searchParam: String, limit: Int): Flow<List<TdApi.Chat>> =
+        searchChatIds(searchParam, limit)
+            .map { ids -> ids.map { getChat(it) } }
+            .flatMapLatest { chatsFlow ->
+                combine(chatsFlow) { chats ->
+                    chats.toList()
+                }
+            }
+    fun searchChatIds(searchParam: String, limit: Int): Flow<LongArray> =
+        callbackFlow {
+            client.client.send(TdApi.SearchChatsOnServer(searchParam,  limit)) {
+                when (it.constructor) {
+                    TdApi.Chats.CONSTRUCTOR -> {
+                        trySend((it as TdApi.Chats).chatIds).isSuccess
+                    }
+                    TdApi.Error.CONSTRUCTOR -> {
+                        error("")
+                    }
+                    else -> {
+                        error("")
+                    }
+                }
+                //close()
+            }
+            awaitClose { }
+        }
     private fun getChatIds(offsetOrder: Long = Long.MAX_VALUE, limit: Int): Flow<LongArray> =
         callbackFlow {
             client.client.send(TdApi.GetChats(TdApi.ChatListMain(),  limit)) {

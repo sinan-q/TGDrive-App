@@ -31,20 +31,18 @@ fun TelegramApp(activity: Activity) {
 
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
-private fun MainNavHost(navController: NavHostController, homeViewModel: HomeViewModel = hiltViewModel(), loginViewModel: LoginViewModel = hiltViewModel()) {
+private fun MainNavHost(navController: NavHostController, homeViewModel: HomeViewModel = hiltViewModel(), loginViewModel: LoginViewModel = hiltViewModel(),chatViewModel: ChatScreenViewModel = hiltViewModel()) {
     NavHost(navController, startDestination = Screen.Home.route) {
         composable(Screen.Home.route) {
             MainScreen(navController = navController, viewModel = homeViewModel)
         }
         composable(Screen.Chat.route) {
             val chatId = Screen.Chat.getChatId(it)
-            val viewModel: ChatScreenViewModel =
-                hiltViewModel(navController.getBackStackEntry(Screen.Chat.route))
-            viewModel.setChatId(chatId)
+            chatViewModel.setChatId(chatId)
             ChatScreen(
                 chatId = chatId,
                 navController = navController,
-                viewModel = viewModel
+                viewModel = chatViewModel
             )
         }
         composable(Screen.CreateChat.route) {

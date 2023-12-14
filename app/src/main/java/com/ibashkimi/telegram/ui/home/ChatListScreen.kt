@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.ibashkimi.telegram.data.TelegramClient
@@ -19,24 +18,22 @@ import org.drinkless.td.libcore.telegram.TdApi
 @Composable
 fun ChatsLoaded(
     client: TelegramClient,
-    chats: LazyPagingItems<TdApi.Chat>,
+    chats: List<TdApi.Chat>,
     modifier: Modifier = Modifier,
     onChatClicked: (Long) -> Unit,
     showSnackbar: (String) -> Unit
 ) {
     LazyColumn(modifier = modifier) {
-        if (chats.loadState.refresh is LoadState.Loading) {
-            item {
-                LoadingChats()
-            }
-        }
+//        if (chats.loadState.refresh is LoadState.Loading) {
+//            item {
+//                LoadingChats()
+//            }
+//        }
         items(
-            count = chats.itemCount,
-            key = chats.itemKey(),
-            contentType = chats.itemContentType()
+            count = chats.size
         ) { index ->
             val item = chats[index]
-            item?.let { chat ->
+            item.let { chat ->
                 ChatItem(
                     client,
                     chat,

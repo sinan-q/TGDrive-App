@@ -1,6 +1,7 @@
 package com.ibashkimi.telegram.ui.home
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
@@ -9,17 +10,17 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.ibashkimi.telegram.R
 import com.ibashkimi.telegram.Screen
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @Composable
@@ -117,12 +118,22 @@ fun HomeContent(
     viewModel: HomeViewModel = hiltViewModel(),
     showSnackbar: (String) -> Unit
 ) {
-    val chats = viewModel.chats.collectAsLazyPagingItems()
-    ChatsLoaded(
-        viewModel.client,
-        chats,
-        modifier,
-        onChatClicked = { navController.navigate(Screen.Chat.buildRoute(it)) },
-        showSnackbar
-    )
+    val chats = viewModel.chats
+    var searchParam by remember{ mutableStateOf("")}
+    Box(contentAlignment = Alignment.Center) {
+        Column {
+            TextField(value = searchParam, onValueChange ={
+                searchParam = it
+                viewModel.search(searchParam)
+            })
+            ChatsLoaded(
+                viewModel.client,
+                chats,
+                modifier,
+                onChatClicked = { viewModel.onSaveChatId(it) },
+                showSnackbar
+            )
+        }
+    }
+
 }

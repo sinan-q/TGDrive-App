@@ -1,6 +1,7 @@
 package com.ibashkimi.telegram.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import com.ibashkimi.telegram.R
 import com.ibashkimi.telegram.data.TelegramClient
@@ -62,5 +63,10 @@ object AppModule {
     fun provideMessagesRepository(client: TelegramClient) = MessagesRepository(client)
 
     @Provides
-    fun provideUserRepository(client: TelegramClient) = UserRepository(client)
+    fun provideUserRepository(client: TelegramClient,sharedPreferences: SharedPreferences) = UserRepository(client,sharedPreferences)
+
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences("sharedPreferences", Context.MODE_PRIVATE)
+    }
 }
