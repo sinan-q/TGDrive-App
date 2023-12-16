@@ -9,6 +9,11 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.InputFile
+import org.drinkless.td.libcore.telegram.TdApi.InputMessageContent
+import org.drinkless.td.libcore.telegram.TdApi.InputMessageDocument
+import org.drinkless.td.libcore.telegram.TdApi.LocalFile
+import java.io.File
 import javax.inject.Inject
 
 class MessagesRepository @Inject constructor(val client: TelegramClient) {
@@ -18,7 +23,7 @@ class MessagesRepository @Inject constructor(val client: TelegramClient) {
             client.client.send(TdApi.GetChatHistory(chatId, fromMessageId, 0, limit, false)) {
                 when (it.constructor) {
                     TdApi.Messages.CONSTRUCTOR -> {
-                        trySend((it as TdApi.Messages).messages.toList()).isSuccess
+                        trySend(((it as TdApi.Messages).messages).toList()).isSuccess
                     }
                     TdApi.Error.CONSTRUCTOR -> {
                         error("")
@@ -48,7 +53,7 @@ class MessagesRepository @Inject constructor(val client: TelegramClient) {
                 }
             }
         }
-        awaitClose { }
+        awaitClose {}
     }
 
     fun sendMessage(
@@ -56,7 +61,7 @@ class MessagesRepository @Inject constructor(val client: TelegramClient) {
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0,
         options: TdApi.MessageSendOptions = TdApi.MessageSendOptions(),
-        inputMessageContent: TdApi.InputMessageContent
+        inputMessageContent: InputMessageContent
     ): Deferred<TdApi.Message> = sendMessage(
         TdApi.SendMessage(
             chatId,
@@ -68,7 +73,7 @@ class MessagesRepository @Inject constructor(val client: TelegramClient) {
         )
     )
 
-    fun sendMessage(sendMessage: TdApi.SendMessage): Deferred<TdApi.Message> {
+    private fun sendMessage(sendMessage: TdApi.SendMessage): Deferred<TdApi.Message> {
         val result = CompletableDeferred<TdApi.Message>()
         client.client.send(sendMessage) {
             when (it.constructor) {

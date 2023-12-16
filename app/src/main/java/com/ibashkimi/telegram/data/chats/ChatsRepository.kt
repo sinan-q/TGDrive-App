@@ -2,10 +2,14 @@ package com.ibashkimi.telegram.data.chats
 
 import androidx.paging.PagingSource
 import com.ibashkimi.telegram.data.TelegramClient
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import org.drinkless.td.libcore.telegram.TdApi
+import org.drinkless.td.libcore.telegram.TdApi.InputFile
+import org.drinkless.td.libcore.telegram.TdApi.InputFileLocal
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -35,8 +39,40 @@ class ChatsRepository @Inject constructor(private val client: TelegramClient) {
                 }
                 //close()
             }
-            awaitClose { }
+            awaitClose {}
         }
+
+    fun sendMessage(
+    chatId: Long,
+    messageThreadId: Long = 0,
+    replyToMessageId: Long = 0,
+    options: TdApi.MessageSendOptions = TdApi.MessageSendOptions(),
+    inputMessageContent: TdApi.InputMessageContent
+    ): Deferred<TdApi.Message> = sendMessage(
+    TdApi.SendMessage(
+    chatId,
+    messageThreadId,
+    replyToMessageId,
+    options,
+    null,
+    inputMessageContent
+    )
+    )
+
+    private fun sendMessage(sendMessage: TdApi.SendMessage): Deferred<TdApi.Message> {
+        val result = CompletableDeferred<TdApi.Message>()
+        client.client.send(sendMessage) {
+            when (it.constructor) {
+                TdApi.Message.CONSTRUCTOR -> {
+                    result.complete(it as TdApi.Message)
+                }
+                else -> {
+                    result.completeExceptionally(error("Something went wrong"))
+                }
+            }
+        }
+        return result
+    }
     private fun getChatIds(offsetOrder: Long = Long.MAX_VALUE, limit: Int): Flow<LongArray> =
         callbackFlow {
             client.client.send(TdApi.GetChats(TdApi.ChatListMain(),  limit)) {

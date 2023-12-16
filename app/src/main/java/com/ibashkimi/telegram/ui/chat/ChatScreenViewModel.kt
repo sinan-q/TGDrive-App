@@ -23,7 +23,7 @@ class ChatScreenViewModel @Inject constructor(
     val messagesRepository: MessagesRepository
 ) : ViewModel() {
 
-    private var chatId: Long = -1
+    private var chatId: Long = -1L
 
     lateinit var chat: Flow<TdApi.Chat?>
         private set
